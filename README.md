@@ -1,5 +1,5 @@
 # COMMIT FORMAT:
-"Pair (lname/lname): description of change"
+"(lname/lname): description of change"
 
 # CHANGELOG
 
