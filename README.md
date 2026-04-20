@@ -10,3 +10,4 @@
   - Front End React w/ TypeScript Initialized
   - Back End Structure Initialized (controller, entity, repository, service)
   - Leaders and Reviews classes initialized w/in entity
+  - Egyinam cloned repo
