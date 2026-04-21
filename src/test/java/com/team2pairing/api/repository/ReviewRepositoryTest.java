@@ -9,7 +9,9 @@ import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
 import java.time.LocalDate;
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @DataJpaTest
 class ReviewRepositoryTest {
@@ -20,21 +22,23 @@ class ReviewRepositoryTest {
     @Autowired
     LeaderRepository leaderRepository;
 
-//    @Test
-//    void shouldSaveAReview() {
-//        // Arrange
-//        LocalDate date = LocalDate.of(2026, 1, 1);
-//
-//        leaderRepository
-//        Leader newLeader = new Leader("Chuma", "Humphrey", "big dog");
-//        Review newReview = new Review(newLeader, 4, "description", date);
-//
-//        // Act
-//        reviewRepository.save(newReview);
-//        Optional<Review> result = reviewRepository.findById(newReview.getId());
-//
-//        // Assert
-//        assertEquals("description", result.get().getDescription());
-//
-//    }
+    @Test
+    void shouldSaveAReview() {
+        // Arrange
+        LocalDate date = LocalDate.of(2026, 1, 1);
+
+        Leader newLeader = new Leader("Chuma", "Humphrey", "big dog");
+        leaderRepository.save(newLeader);
+
+        Review newReview = new Review(newLeader, 4, "description", date);
+        reviewRepository.save(newReview);
+
+        // Act
+        Optional<Review> result = reviewRepository.findById(newReview.getId());
+
+        // Assert
+        assertEquals("description", result.get().getDescription());
+        assertThat(result.get().getLeader()).isEqualTo(newReview.getLeader());
+
+    }
 }
