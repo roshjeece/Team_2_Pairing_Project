@@ -30,8 +30,10 @@ public class Review {
     @Column(name = "date_of_review", nullable = false)
     private LocalDate reviewDate;
 
-    public Review(Leader leader, Integer rating, String description, LocalDate reviewDate) {
-        this.leader = leader;
+    private Long leader_id;
+
+    public Review(Long leader_id, Integer rating, String description, LocalDate reviewDate) {
+        this.leader_id = leader_id;
         this.rating = rating;
         this.description = description;
         this.reviewDate = reviewDate;

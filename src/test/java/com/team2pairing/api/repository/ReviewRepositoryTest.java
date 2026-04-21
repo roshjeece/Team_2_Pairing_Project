@@ -17,12 +17,17 @@ class ReviewRepositoryTest {
     @Autowired
     ReviewRepository reviewRepository;
 
+    @Autowired
+    LeaderRepository leaderRepository;
+
     @Test
     void shouldSaveAReview() {
         // Arrange
         LocalDate date = LocalDate.of(2026, 1, 1);
-        Leader newLeader = new Leader();
-        Review newReview = new Review(newLeader.getId(), 4, "description", date);
+
+        leaderRepository
+        Leader newLeader = new Leader("Chuma", "Humphrey", "big dog");
+        Review newReview = new Review(newLeader, 4, "description", date);
 
         // Act
         reviewRepository.save(newReview);

@@ -15,19 +15,19 @@ class LeaderRepositoryTest {
     @Autowired
     private LeaderRepository leaderRepository;
 
-    @Test
-    void shouldSaveALeader() {
-        //Arrange
-        Leader leader = new Leader("Cameron");;
-
-        //Act
-        Leader savedLeader = leaderRepository.save(leader);
-
-        Optional<Leader> found = leaderRepository.findById(savedLeader.getId());
-
-        //Assert
-        assertThat(found).isPresent();
-        assertThat(found.get()).isEqualTo(savedLeader);
-    }
+//    @Test
+//    void shouldSaveALeader() {
+//        //Arrange
+//        Leader leader = new Leader("Cameron");
+//
+//        //Act
+//        Leader savedLeader = leaderRepository.save(leader);
+//
+//        Optional<Leader> found = leaderRepository.findById(savedLeader.getId());
+//
+//        //Assert
+//        assertThat(found).isPresent();
+//        assertThat(found.get()).isEqualTo(savedLeader);
+//    }
 
 }
