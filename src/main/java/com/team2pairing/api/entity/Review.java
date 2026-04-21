@@ -17,7 +17,7 @@ public class Review {
     // Leader needs to be matched after merge
     @ManyToOne
     @JoinColumn(name = "leader_id", nullable = false)
-    private Leaders leader;
+    private Leader leader;
 
     @Column(name = "leader_rating", nullable = false)
     private Integer rating;
@@ -28,7 +28,7 @@ public class Review {
     @Column(name = "date_of_review", nullable = false)
     private LocalDate reviewDate;
 
-    public Review(Long id, Leaders leader, Integer rating, String description, LocalDate reviewDate) {
+    public Review(Long id, Leader leader, Integer rating, String description, LocalDate reviewDate) {
         this.id = id;
         this.leader = leader;
         this.rating = rating;
