@@ -1,11 +1,13 @@
 package com.team2pairing.api.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDate;
 
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name = "leader_review")
 public class Review {
@@ -28,8 +30,7 @@ public class Review {
     @Column(name = "date_of_review", nullable = false)
     private LocalDate reviewDate;
 
-    public Review(Long id, Leader leader, Integer rating, String description, LocalDate reviewDate) {
-        this.id = id;
+    public Review(Leader leader, Integer rating, String description, LocalDate reviewDate) {
         this.leader = leader;
         this.rating = rating;
         this.description = description;
