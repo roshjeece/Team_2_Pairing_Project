@@ -1,22 +1,29 @@
 package com.team2pairing.api.entity;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@Data
 @Entity
+@Table(name = "leader")
 public class Leader {
 
-    @Getter
-    @Setter
     @Id
     @GeneratedValue
     private Long id;
 
+    @Column(nullable = false, length = 50)
     private String fname;
+
+    @Column(nullable = false, length = 50)
+    private String lname;
+
+    @Column (nullable = false)
+    private String job_title;
 
     public Leader() {
 
@@ -26,11 +33,5 @@ public class Leader {
         this.fname = fname;
     }
 
-    public String getFname() {
-        return fname;
-    }
 
-    public void setFname(String fname) {
-        this.fname = fname;
-    }
 }

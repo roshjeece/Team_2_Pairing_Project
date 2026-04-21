@@ -27,7 +27,7 @@ class LeaderRepositoryTest {
 
         //Assert
         assertThat(found).isPresent();
-//        assertThat(found.get().get)
+        assertThat(found.get()).isEqualTo(savedLeader);
     }
 
 }
