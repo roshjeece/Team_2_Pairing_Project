@@ -38,7 +38,6 @@ class LeaderServiceTest {
 
         verify(leaderRepository).save(leader);
 
-
     }
 
 }
