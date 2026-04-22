@@ -24,16 +24,16 @@ class LeaderServiceTest {
 
     @Test
     void shouldSaveNewLeader() {
-        //Arrange
+        // Arrange
         Leader leader = new Leader("Cameron", "Spencer", "CEO");
         Leader savedLeader = new Leader("Cameron", "Spencer", "CEO");
         savedLeader.setId(1L);
 
-        //Act
+        // Act
         when(leaderRepository.save(leader)).thenReturn(savedLeader);
         Leader result = leaderService.saveLeader(leader);
 
-        //Assert
+        // Assert
         assertThat(result.getId()).isEqualTo(1L);
 
         verify(leaderRepository).save(leader);
