@@ -12,7 +12,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -35,15 +37,20 @@ class ReviewServiceTest {
         // Arrange
         LocalDate date = LocalDate.of(2023, 5, 27);
         newLeader = new Leader("Joshua", "Reece", "janitor");
-        leaderRepository.save(newLeader);
+
         newReview = new Review(newLeader, 5, "perfect", date);
-        reviewRepository.save(newReview);
+        Review savedReview = new Review(newLeader, 5, "perfect", date);
+        savedReview.setId(1L);
 
         // Act
-//        when(reviewRepository.save(newReview)).thenReturn(newReview);
-//        Review result = reviewService
+        when(reviewRepository.save(newReview)).thenReturn(savedReview);
+        Review result = reviewService.saveReview(newReview);
 
         // Assert
+
+        assertThat(result.getId()).isEqualTo(1L);
+
+        verify(reviewRepository).save(newReview);
     }
 
 }
