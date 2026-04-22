@@ -1,4 +1,7 @@
 import type {Leader} from "../LeaderType.ts";
+import {LeaderItem} from "../LeaderItem.tsx";
+import { render, screen } from '@testing-library/react';
+import {expect} from "vitest";
 
 describe('Leader Item Tests', () => {
     it('should display a single leader item', () => {
@@ -9,7 +12,9 @@ describe('Leader Item Tests', () => {
             job_title: "CEO",
         };
         //Arrange
+        render(<LeaderItem initialLeader={leader1}/>);
 
+        expect(screen.getByRole('listitem', { name: /leader/i})).toBeInTheDocument();
 
     });
 });
