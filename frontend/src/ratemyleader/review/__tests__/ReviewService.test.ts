@@ -6,6 +6,7 @@ import {HttpResponse, http} from "msw";
 import {axiosGetOneReview, getAllReviews} from "../ReviewService.ts";
 import axios from "axios";
 
+
 describe('Review Service Tests', () => {
 
 
@@ -14,6 +15,8 @@ describe('Review Service Tests', () => {
         server.listen();
         axios.defaults.baseURL = "http://localhost:8080";
     });
+
+    beforeEach
 
     afterAll(() => server.close());
     afterEach(() => server.resetHandlers());
@@ -38,7 +41,7 @@ describe('Review Service Tests', () => {
                 ),
         );
 
-        expect(await axiosGetOneReview(1)).toStrictEqual(expected);
+        expect(await axiosGetOneReview(1)).toStrictEqual(expected.id);
 
         // expect(await getAllReviews()).toStrictEqual(expected);
     });
