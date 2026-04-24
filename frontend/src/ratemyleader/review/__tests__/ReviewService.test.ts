@@ -3,7 +3,7 @@ import type {Review} from "../ReviewType.ts";
 import type {Leader} from "../../leader/LeaderType.ts";
 import {beforeAll, expect} from "vitest";
 import {HttpResponse, http} from "msw";
-import {axiosGetOneReview, getAllReviews} from "../ReviewService.ts";
+import {saveReview} from "../ReviewService.ts";
 import axios from "axios";
 
 
@@ -16,19 +16,19 @@ describe('Review Service Tests', () => {
         axios.defaults.baseURL = "http://localhost:8080";
     });
 
-    beforeEach
 
     afterAll(() => server.close());
     afterEach(() => server.resetHandlers());
 
-    it('should get one review', async () => {
+    it('should save a review', async () => {
 
-        const currentDate = new Date();
+        // LocalDate date = LocalDate.of(2023, 5, 27);
+        const currentDate = new Date().toISOString().split('T')[0];
 
         const leader: Leader= {
             id: 1,
-            fname: "Chuma",
-            lname: "Humphrey",
+            fname: "Peter",
+            lname: "Egyinam",
             job_title: "janitor"
         };
 
@@ -36,22 +36,16 @@ describe('Review Service Tests', () => {
         const expected: Review = {id: 1, leader: leader, rating: 5, description: "good", date: currentDate }
 
         server.use(
-            http.get('/api/entity/review/1', () =>
-            HttpResponse.json(expected, {status: 200}),
+            http.post('http://localhost:8080/api/entity/review', () =>
+            HttpResponse.json(expected, {status: 201}),
                 ),
         );
 
-        expect(await axiosGetOneReview(1)).toStrictEqual(expected.id);
+        expect(await saveReview(expected)).toStrictEqual(expected);
 
-        // expect(await getAllReviews()).toStrictEqual(expected);
     });
 
 
 });
 
-        // const expected: Review[] = [
-        //
-        //     {id: 1, leader: leader, rating: 5, description: "good", date: currentDate }
-        //     // {id: 2, leader: leader, rating: 5, description: "good", date: currentDate }
-        //
-        // ];
+

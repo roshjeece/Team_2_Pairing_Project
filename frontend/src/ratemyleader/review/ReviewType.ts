@@ -6,5 +6,5 @@ export type Review = {
     leader: Leader;
     rating: number;
     description: string;
-    date: Date;
+    date: string;
 };
