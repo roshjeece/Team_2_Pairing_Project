@@ -1,10 +1,10 @@
 import {Route, Routes} from "react-router";
-import {ReviewPage} from "../ratemyleader/review/ReviewPage.tsx";
+import {AddReviewPage} from "../ratemyleader/review/AddReviewPage.tsx";
 
 export default function AppRoutes() {
     return (
         <Routes>
-            <Route path="/" element={<ReviewPage/>}/>
+            <Route path="/" element={<AddReviewPage/>}/>
         </Routes>
     )
 }
