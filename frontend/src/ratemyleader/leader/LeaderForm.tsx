@@ -20,40 +20,46 @@ export const LeaderForm = () => {
         resolver: yupResolver(validationSchema)
     })
 
-function onSubmit(data: Leader) {
-    axiosSaveLeader(data);
+    const onSubmit = async (data: Leader) => {
+        await axiosSaveLeader(data);
 
-}
+    }
 
     return (
         <>
             <h2>Leader Form</h2>
             <form onSubmit={handleSubmit(data => onSubmit(data))} method={'POST'}>
-                <label htmlFor="{fname}" aria-label={"fname"}>First Name:
-                    <input
-                        id={"fname"}
-                        type={"text"}
-                        {...register("fname")}
-                    />
+                <label htmlFor={"fname"} aria-label={"fname"}>First Name:
                 </label>
+                <input
+                    id={"fname"}
+                    type={"text"}
+                    {...register("fname")}
+                />
 
                 <br/>
 
-                <label htmlFor="{lname}" aria-label={"lname"}>Last Name:
-                    <input
-                        id={"lname"}
-                        type={"text"}
-                        {...register("lname")}
-                    />
+                <label htmlFor={"lname"} aria-label={"lname"}>Last Name:
                 </label>
+                <input
+                    id={"lname"}
+                    type={"text"}
+                    {...register("lname")}
+                />
 
-                <label htmlFor="{job_title}" aria-label={"job_title"}>Job Title:
-                    <input
-                        id={"job_title"}
-                        type={"text"}
-                        {...register("job_title")}
-                    />
+                <label htmlFor={"job_title"} aria-label={"job_title"}>Job Title:
                 </label>
+                <input
+                    id={"job_title"}
+                    type={"text"}
+                    {...register("job_title")}
+                />
+
+                <br/>
+
+                <input type={'submit'} value={"Add Leader"}/>
+
             </form>
         </>
-    )}
+    )
+}
