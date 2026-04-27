@@ -11,10 +11,13 @@ describe('Leader Item Tests', () => {
             lname: "Spencer",
             job_title: "CEO",
         };
+
         //Arrange
         render(<LeaderItem initialLeader={leader1}/>);
 
         expect(screen.getByRole('listitem', { name: /leader/i})).toBeInTheDocument();
+        expect(screen.getByText(/Cameron Spencer/i)).toBeInTheDocument();
+        expect(screen.getByText(/Ceo/i)).toBeInTheDocument();
 
     });
 });
