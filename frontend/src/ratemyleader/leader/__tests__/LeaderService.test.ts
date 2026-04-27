@@ -8,7 +8,7 @@ describe('Leader Service Test', () => {
     const server = setupServer();
     beforeAll(() => {
         server.listen();
-        // axios.defaults.baseURL = "http://localhost:8080";
+        axios.defaults.baseURL = "http://localhost:8080";
     });
 
     afterAll(() => server.close());
@@ -23,10 +23,10 @@ describe('Leader Service Test', () => {
         };
 
         server.use(
-            http.post('/api/entity/leader', () =>
+            http.post('http://localhost:8080/api/entity/leader', () =>
                 HttpResponse.json(leader, {status: 201})
             ),
         );
 
-        expect(await axiosSaveLeader()).toStrictEqual(leader)
+        expect(await axiosSaveLeader(leader)).toStrictEqual(leader)
     })});

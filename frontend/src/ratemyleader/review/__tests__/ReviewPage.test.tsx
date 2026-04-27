@@ -1,21 +1,21 @@
 import { render, screen } from '@testing-library/react'
-import {AddReviewPage} from "../AddReviewPage.tsx";
+import {ReviewPage} from "../ReviewPage.tsx";
 
 describe('FormComponent', () => {
 
   // TEST 1 — Fields render correctly
   it('should render describe text box', () => {
-    render(<AddReviewPage/>)
+    render(<ReviewPage/>)
 
     expect(screen.getByPlaceholderText('Description')).toBeInTheDocument();
 
   })
     it('should display Enter Rating', () => {
-        render(<AddReviewPage/>)
+        render(<ReviewPage/>)
         expect(screen.getByRole('heading', {name:/Enter Rating/i})).toBeInTheDocument()
     });
     it('should display Submit Review Button', () => {
-    render(<AddReviewPage/>)
+    render(<ReviewPage/>)
     expect(screen.getByRole('button', {name:/Submit Review/i})).toBeInTheDocument()
     });
 
