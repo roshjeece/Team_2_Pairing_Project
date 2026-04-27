@@ -1,16 +1,9 @@
 import {useForm} from "react-hook-form";
-import {yupResolver} from "@hookform/resolvers/yup/src";
+import {yupResolver} from "@hookform/resolvers/yup";
 import type {Review} from "./ReviewType.ts";
 import {saveReview} from "./ReviewService.ts";
-import {useEffect} from "react";
 import {number, object, string} from "yup";
-import type {Leader} from "../leader/LeaderType.ts";
 
-type ReviewFormProps = {
-    isOpen: boolean;
-    onClose: () => void;
-    onSuccess?: () => void;
-}
 
 const validationSchema = object({
     id: number(),
@@ -22,19 +15,30 @@ const validationSchema = object({
 export const ReviewForm = () => {
     const {
         register,
-        handleSubmit,
-        reset,
-        formState: {errors}
+        handleSubmit
+        // formState: {errors}
     } = useForm<Review>({
-        resolver: yupResolver()
+        resolver: yupResolver(validationSchema) as any
     })
+
+    const onSubmit = async (data:any) => {
+        await saveReview(data)
+    };
 
 
     return (
         <>
             <h2> Enter a rating </h2>
-                <form>
+                <form onSubmit={handleSubmit(onSubmit)} method="POST">
                     <fieldset>
+                        <label htmlFor="date">Date</label>
+                        <input
+                            id="date"
+                            type="date"
+                            {...register("date")}
+
+                        />
+
                         <label htmlFor="rating1">1</label>
                         <input
                             id="rating1"
@@ -60,11 +64,14 @@ export const ReviewForm = () => {
                     </fieldset>
 
                     <input
+                        id="description"
                         type="text"
+                        name="description"
                         placeholder="Description"
+                        {...register("description")}
                     />
 
-                    <button>Submit Review</button>
+                    <button type="submit">Submit Review</button>
 
                 </form>
         </>
