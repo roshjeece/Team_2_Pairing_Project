@@ -1,42 +1,30 @@
-import { render, screen } from '@testing-library/react'
-import {ReviewPage} from "../ReviewPage.tsx";
+// Tests that ReviewPage renders the correct heading and the ReviewForm component.
+// ReviewForm is mocked — we are not testing form behavior here, only that the page mounts correctly.
 
-describe('FormComponent', () => {
+import { ReviewPage } from "../ReviewPage.tsx";
+import { render, screen } from "@testing-library/react";
+import '@testing-library/jest-dom';
+import { expect, vi, describe, it, beforeEach } from "vitest";
 
-  // TEST 1 — Fields render correctly
-  it('should render describe text box', () => {
-    render(<ReviewPage/>)
+// Mock ReviewForm so ReviewPage tests stay isolated from form logic
+vi.mock("../ReviewForm.tsx", () => ({
+  ReviewForm: () => <div>Mock Review Form</div>
+}));
 
-    expect(screen.getByPlaceholderText('Description')).toBeInTheDocument();
+describe('Review Page', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
 
-  })
-    it('should display Enter Rating', () => {
-        render(<ReviewPage/>)
-        expect(screen.getByRole('heading', {name:/Enter Rating/i})).toBeInTheDocument()
-    });
-    it('should display Submit Review Button', () => {
-    render(<ReviewPage/>)
-    expect(screen.getByRole('button', {name:/Submit Review/i})).toBeInTheDocument()
-    });
+  // Confirms the page heading renders
+  it('should display the review page heading', () => {
+    render(<ReviewPage />);
+    expect(screen.getByRole('heading', { name: /Review Page/i })).toBeInTheDocument();
+  });
 
-
-
-    // // TEST 2 — Form submits correct data
-  // it('should call onSubmit with form data when submitted', async () => {
-  //   const mockSubmit = vi.fn()
-  //   render(<FormComponent onSubmit={mockSubmit} />)
-  //
-  //   await userEvent.type(screen.getByPlaceholderText('Field 1'), 'Value 1')
-  //   await userEvent.type(screen.getByPlaceholderText('Field 2'), 'Value 2')
-  //   await userEvent.type(screen.getByPlaceholderText('Field 3'), 'Value 3')
-  //   await userEvent.click(screen.getByRole('button', { name: /submit/i }))
-  //
-  //   expect(mockSubmit).toHaveBeenCalledWith({
-  //     field1: 'Value 1',
-  //     field2: 'Value 2',
-  //     field3: 'Value 3'
-  //   })
-  // })
-})
-
-
+  // Confirms ReviewForm is rendered on the page
+  it('should display the review form', () => {
+    render(<ReviewPage />);
+    expect(screen.getByText(/Mock Review Form/i)).toBeInTheDocument();
+  });
+});

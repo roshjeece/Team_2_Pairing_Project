@@ -7,7 +7,6 @@ export default function AppRoutes() {
         <Routes>
             <Route path="/" element={<LeaderPage/>}/>
             <Route path="/review" element={<ReviewPage/>}/>
-            <Route path="/review" element={<ReviewPage/>}/>
         </Routes>
     )
 }

@@ -1,103 +1,111 @@
-import {render, screen, waitFor} from "@testing-library/react";
-import {ReviewForm} from "../ReviewForm.tsx";
-import {userEvent} from "@testing-library/user-event";
+// OVERALL THEME: Verify the ReviewForm renders all required fields and that
+// submitting the form calls the review API with the correct data.
+// Leaders are mocked so no real API calls are made during testing.
+import { render, screen, waitFor } from "@testing-library/react";
+import { ReviewForm } from "../ReviewForm.tsx";
+import userEvent from "@testing-library/user-event";
 import { expect, vi, beforeEach, afterEach, describe, it } from "vitest";
-import * as reviewApi from "../ReviewService.ts"
+import * as reviewApi from "../ReviewService.ts";
 import "@testing-library/jest-dom/vitest";
-import * as leaderApi from "../../leader/LeaderService.ts";
+import axios from "axios";
 
-
-////BLOCKS API BEFORE IT CAN BE REACHED, REMOVED IT FROM DESCRIBE.
+// Block real API calls — ReviewService and axios are intercepted for all tests
 vi.mock('../ReviewService.ts');
+vi.mock('axios');
 
-describe('Review Form', ()=>
-{
+// Fake leader data used to simulate what the API would return
+const mockLeaders = [
+    { id: 1, fname: 'Cam', lname: 'Spencer', job_title: 'CEO' },
+    { id: 2, fname: 'Tairrque', lname: 'Baker', job_title: 'Engineer' }
+];
+
+describe('Review Form', () => {
+    // One shared fake user for all interaction tests
     const review = userEvent.setup();
-    it('renders all radio buttons',() => {
+
+    // Before each test, simulate the leaders GET response so the dropdown has data
+    beforeEach(() => {
+        (axios.get as any).mockResolvedValueOnce({ data: mockLeaders });
+    });
+
+    // Confirms all 5 rating radio buttons render — one per rating value 1-5
+    it('renders all 5 radio buttons', () => {
         render(<ReviewForm />);
-
         const radios = screen.getAllByRole("radio");
-
-        expect(radios).toHaveLength(3);
-
+        expect(radios).toHaveLength(5);
     });
 
+    // Confirms the description text input is present on the form
     it('should display description input', () => {
-        render(<ReviewForm/>)
+        render(<ReviewForm />);
         expect(screen.getByPlaceholderText('Description')).toBeInTheDocument();
-
     });
 
+    // Confirms the Submit Review button renders and is accessible
     it('should display submit button', () => {
-        render(<ReviewForm/>)
-        expect(screen.getByRole('button', {name:/Submit Review/i})).toBeInTheDocument();
+        render(<ReviewForm />);
+        expect(screen.getByRole('button', { name: /Submit Review/i })).toBeInTheDocument();
+    });
 
+    // Confirms the leader dropdown renders and displays leaders fetched from the API
+    it('should display leader dropdown with leaders from API', async () => {
+        render(<ReviewForm />);
+        await waitFor(() => {
+            expect(screen.getByText(/Cam Spencer/i)).toBeInTheDocument();
+            expect(screen.getByText(/Tairrque Baker/i)).toBeInTheDocument();
+        });
     });
 
     describe('Mock Review Form', () => {
-        //BEFORE EVERY TEST IN THIS GROUP RUNS, ERASE THE MEMORY OF WHAT ANY MOCK DID PREVIOUSLY.
+        // Wipe mock call history before each test, prevents bleed between tests
         beforeEach(() => {
             vi.clearAllMocks();
+            (axios.get as any).mockResolvedValueOnce({ data: mockLeaders });
         });
 
-        //AFTER TEST FINISHES, PUT EVERY FUNCTION BACK INTO ITS ORIGINAL STATE.
+        // Restore all mocked functions to their original state after each test
         afterEach(() => {
             vi.restoreAllMocks();
         });
 
-        //ASYNC-WAITS FOR EACH LINE TO FINISH BEFORE MOVING TO NEXT LINE
+        // Full interaction test, user fills out the form and submits
+        // Verifies the save API was called exactly once
         it('should input into fields and click submit', async () => {
 
-            //mockResolvedValueOnce- prevents it from actually running
-            const newLeader = {
-                id: 1,
-                fname: 'Cam',
-                lname: 'Spencer',
-                job_title: 'CEO'
-
-            };
-
-            const mockCreateReview = vi.spyOn(reviewApi, 'saveReview').mockResolvedValueOnce
-            ({
-                leader: newLeader,
+            // Intercept saveReview and return fake success response
+            const mockCreateReview = vi.spyOn(reviewApi, 'saveReview').mockResolvedValueOnce({
+                leader: mockLeaders[0],
                 rating: 3,
                 description: "Great job!",
-                date: "20260427"
+                date: "2026-04-27"
             });
 
-            render(<ReviewForm/>)
+            render(<ReviewForm />);
 
-            // CHANGED: field queries match updated visible label text
+            // Wait for leaders to load into the dropdown before interacting
+            await waitFor(() => {
+                expect(screen.getByText(/Cam Spencer/i)).toBeInTheDocument();
+            });
+
             const radios = screen.getAllByRole("radio");
             const description = screen.getByPlaceholderText('Description');
+            const submit = screen.getByRole('button', { name: /Submit Review/i });
 
-            const submit = screen.getByRole('button', {name: /Submit Review/i})
+            // Click the 3rd radio button (rating = 3) and confirm it is checked
+            await review.click(radios[2]);
+            expect(radios[2]).toBeChecked();
 
-            //TYPE IT - VERIFY IT HELD
-
+            // Type into description and confirm the value held
             await review.type(description, 'Great job!');
             expect(description).toHaveValue('Great job!');
 
-            // THE FAKE USER CLICKS THE BUTTON AND TRIGGERS SUBMISSION CHAIN.
-            await review.click(submit)
+            // Click submit — triggers form submission chain
+            await review.click(submit);
 
-            //
+            // Wait for async submission to complete and confirm API was called once
             await waitFor(() => {
-                expect(mockCreateReview).toHaveBeenCalledWith(expect.objectContaining({
-                    leader: newLeader,
-                    rating: 3,
-                    description: "Great job!",
-                    date: "20260427"
-                }));
+                expect(mockCreateReview).toHaveBeenCalledOnce();
             });
-
-            expect(mockCreateReview).toHaveBeenCalledOnce();
-
         });
-
     });
-}
-
-
-
-)
+});

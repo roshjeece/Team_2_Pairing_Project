@@ -1,11 +1,12 @@
-import {BrowserRouter} from 'react-router';
+import { BrowserRouter } from 'react-router';
 import AppRoutes from "./routes/AppRoutes.tsx";
+import { NavBar } from "./ratemyleader/components/NavBar.tsx";
 
-
-export default function App(){
-    return(
+export default function App() {
+    return (
         <BrowserRouter>
-            <AppRoutes/>
+            <NavBar />
+            <AppRoutes />
         </BrowserRouter>
     )
 }
