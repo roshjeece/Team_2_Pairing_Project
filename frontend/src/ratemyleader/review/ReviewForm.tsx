@@ -16,7 +16,7 @@ const validationSchema = object({
     id: number(),
     rating: number().required("Rating is required"),
     description: string().required("Description is required"),
-    date: string()
+    date: string().required("Date is required")
 });
 
 export const ReviewForm = () => {
@@ -80,6 +80,14 @@ export const ReviewForm = () => {
                 </select>
 
                 <br />
+                {/*Adding date */}
+                <label htmlFor={'date'}>Date:</label>
+                <input
+                    id="date"
+                    type="date"
+                    {...register("date")}
+                />
+                {errors.date && <span>{errors.date.message}</span>}
 
                 {/* Rating fieldset — renders radio buttons 1 through 5.
                    Added React Hook-Validation to Validate The Radio Buttons */}
@@ -94,12 +102,15 @@ export const ReviewForm = () => {
                                 value={n}
                                 {...register("rating")}
                             />
+                            {errors.rating && <span>{errors.rating.message}</span>}
                         </span>
+
                     ))}
                 </fieldset>
 
                 {/* Description free-text input — registered with react-hook-form.
                     Shows error message if left empty on submit */}
+
                 <input
                     id="description"
                     type="text"
