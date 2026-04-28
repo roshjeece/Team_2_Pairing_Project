@@ -11,31 +11,31 @@ const validationSchema = object({
     job_title: string().required("Enter A Job Title")
 });
 
-//ADDED ERROR VALIDATION FOR TEST
-export const LeaderForm = () => {
+// ADDED: prop type so LeaderPage can refresh the list after a save
+type LeaderFormProps = {
+    onLeaderSaved?: () => void;
+}
+
+export const LeaderForm = ({ onLeaderSaved }: LeaderFormProps) => {
     const {
         register,
         handleSubmit,
+        reset,                              // ADDED: clears form after submit
         formState: { errors }
     } = useForm<Leader>({
         resolver: yupResolver(validationSchema) as any
     });
 
     const onSubmit = async (data: any) => {
-        {
-            await axiosSaveLeader(data);
-        };
-    }
+        await axiosSaveLeader(data);
+        reset();                            // ADDED: clear fields after save
+        if (onLeaderSaved) onLeaderSaved(); // ADDED: tell parent to refresh
+    };
 
     return (
         <>
             <h2>Leader Form</h2>
             <form onSubmit={handleSubmit(onSubmit)} method="POST">
-
-                {/* CHANGED: removed aria-label from all labels
-                    aria-label on a <label> overrides visible text for screen readers,
-                    so getByLabelText("fname") worked but "First Name" was never announced.
-                    htmlFor + id pairing is all that's needed — that's what links label to input. */}
 
                 <label htmlFor="fname">First Name:</label>
                 <input
@@ -55,7 +55,6 @@ export const LeaderForm = () => {
                 />
                 {errors.lname && <span>{errors.lname.message}</span>}
 
-
                 <br />
 
                 <label htmlFor="job_title">Job Title:</label>
@@ -68,9 +67,6 @@ export const LeaderForm = () => {
 
                 <br />
 
-                {/* CHANGED: <input type="submit"> → <button type="submit">
-                    Both carry the implicit button role, but <button> is unambiguous
-                    to getByRole and is the semantic standard for clickable actions. */}
                 <button type="submit">Add Leader</button>
 
             </form>
