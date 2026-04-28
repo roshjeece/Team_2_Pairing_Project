@@ -15,8 +15,7 @@ import axios from "axios";
 const validationSchema = object({
     id: number(),
     rating: number().required("Rating is required"),
-    description: string().required("Description is required"),
-    date: string().required("Date is required")
+    description: string().required("Description is required")
 });
 
 export const ReviewForm = () => {
@@ -80,14 +79,7 @@ export const ReviewForm = () => {
                 </select>
 
                 <br />
-                {/*Adding date */}
-                <label htmlFor={'date'}>Date:</label>
-                <input
-                    id="date"
-                    type="date"
-                    {...register("date")}
-                />
-                {errors.date && <span>{errors.date.message}</span>}
+
 
                 {/* Rating fieldset — renders radio buttons 1 through 5.
                    Added React Hook-Validation to Validate The Radio Buttons */}

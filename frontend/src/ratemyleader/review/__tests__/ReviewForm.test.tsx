@@ -76,8 +76,7 @@ describe('Review Form', () => {
             const mockCreateReview = vi.spyOn(reviewApi, 'saveReview').mockResolvedValueOnce({
                 leader: mockLeaders[0],
                 rating: 3,
-                description: "Great job!",
-                date: "2026-04-27"
+                description: "Great job!"
             });
 
             render(<ReviewForm />);
@@ -89,7 +88,6 @@ describe('Review Form', () => {
             const leaderSelect = screen.getByLabelText(/select leader/i);
             const radios = screen.getAllByRole("radio");
             const description = screen.getByPlaceholderText('Description');
-            const dateInput = screen.getByLabelText(/date/i);
             const submit = screen.getByRole('button', { name: /Submit Review/i });
 
             // select leader
@@ -104,10 +102,6 @@ describe('Review Form', () => {
             await review.type(description, 'Great job!');
             expect(description).toHaveValue('Great job!');
 
-            //Check if date selected matches input value
-            await review.type(dateInput, "2026-04-27");
-            expect(dateInput).toHaveValue("2026-04-27");
-
             // Click submit — triggers form submission chain
             await review.click(submit);
 
@@ -116,8 +110,7 @@ describe('Review Form', () => {
                 expect(mockCreateReview).toHaveBeenCalledWith(expect.objectContaining({
                     leader: mockLeaders[0],
                     rating: 3,
-                    description: "Great job!",
-                    date: "2026-04-27"
+                    description: "Great job!"
                     }));
             });
             expect(mockCreateReview).toHaveBeenCalledOnce();
@@ -130,8 +123,7 @@ describe('Review Form', () => {
                 id: 1,
                 leader: mockLeaders[0],
                 rating: 3,
-                description: "Great job!",
-                date: "2026-04-27"
+                description: "Great job!"
             });
 
             render(<ReviewForm/>);
@@ -144,7 +136,6 @@ describe('Review Form', () => {
             await waitFor(()=>{
                 expect(screen.getAllByText(/Rating is required/i).length).toBeGreaterThan(0);
                 expect(screen.getByText(/Description is required/i)).toBeInTheDocument();
-                expect(screen.getByText(/Date is required/i)).toBeInTheDocument();
             });
             expect(mockCreateReview).not.toHaveBeenCalled();
         });
