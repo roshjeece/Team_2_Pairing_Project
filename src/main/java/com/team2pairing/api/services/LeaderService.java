@@ -4,6 +4,7 @@ import com.team2pairing.api.repository.LeaderRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class LeaderService {
@@ -20,4 +21,7 @@ public class LeaderService {
     public List<Leader> getAllLeaders() {
         return leaderRepository.findAll();
     }
+
+//    public Optional<Leader> findByfname(String label) {return leaderRepository.findByfname(label);
+
 }
