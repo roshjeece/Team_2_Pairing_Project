@@ -11,7 +11,6 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @DataJpaTest
 class ReviewRepositoryTest {
@@ -40,5 +39,25 @@ class ReviewRepositoryTest {
         assertEquals("description", result.get().getDescription());
         assertThat(result.get().getLeader()).isEqualTo(newReview.getLeader());
 
+    }
+
+    @Test
+    void shouldRemoveAReview() {
+        // Arrange
+        LocalDate date = LocalDate.of(2026, 1, 1);
+
+        Leader newLeader = new Leader("Chuma", "Humphrey", "big dog");
+        leaderRepository.save(newLeader);
+
+        Review newReview = new Review(newLeader, 4, "description", date);
+        reviewRepository.save(newReview);
+
+        Long tempId = newReview.getId();
+
+        // Act
+        reviewRepository.deleteById(newReview.getId());
+
+        // Assert
+        assertThat(reviewRepository.findById(tempId)).isEmpty();
     }
 }

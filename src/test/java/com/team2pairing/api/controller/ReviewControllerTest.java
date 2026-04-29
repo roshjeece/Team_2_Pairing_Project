@@ -18,6 +18,7 @@ import java.util.List;
 import static org.hamcrest.Matchers.matchesPattern;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -77,6 +78,26 @@ class ReviewControllerTest {
         }
 
 
+
+    @Test
+    void shouldDeleteAReviewById() throws Exception {
+        // Arrange
+        LocalDate date = LocalDate.of(2026, 1, 1);
+        Leader newLeader = new Leader("Chuma", "Humphrey", "janitor");
+
+        Review newReview = new Review(newLeader, 3, "good", date);
+        newReview.setId(1L);
+
+        Long tempId = newReview.getId();
+
+        // Act
+        doNothing().when(reviewService).deleteReviewById(tempId);
+
+        mockMvc.perform(delete("/api/entity/review/" + tempId))
+                .andExpect(status().isNoContent());
+
+        verify(reviewService).deleteReviewById(1L);
+    }
 
 
 }

@@ -28,4 +28,10 @@ public class ReviewController {
     public ResponseEntity<List<Review>> getReviewsByLeaderId(@PathVariable Long leader_id){
         return ResponseEntity.ok(reviewService.getReviewsByLeaderId(leader_id));
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteReview(@PathVariable Long id){
+        reviewService.deleteReviewById(id);
+        return ResponseEntity.noContent().build();
+    }
 }
