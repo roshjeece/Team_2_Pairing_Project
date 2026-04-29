@@ -1,4 +1,5 @@
 package com.team2pairing.api.controller;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 import com.team2pairing.api.entity.Leader;
 import com.team2pairing.api.entity.Review;
@@ -12,6 +13,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import static org.hamcrest.Matchers.matchesPattern;
 import static org.mockito.ArgumentMatchers.any;
@@ -53,6 +55,28 @@ class ReviewControllerTest {
         // Assert
         verify(reviewService, times(1)).saveReview(any(Review.class));
     }
+        @Test
+    void shouldGetReviewsByLeaderId() throws Exception {
+            //Arrange
+            LocalDate date = LocalDate.of(2026, 1, 1);
+            Leader newLeader = new Leader("Chuma", "Humphrey", "janitor");
+
+            List<Review> fakeReviews = List.of(
+                    new Review(newLeader, 3, "good", date),
+                    new Review(newLeader, 5, "excellent", date)
+
+            );
+
+            when(reviewService.getReviewsByLeaderId(1L)).thenReturn(fakeReviews);
+            mockMvc.perform(get("/api/entity/review/leader/1"))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.length()").value(2))
+                    .andExpect(jsonPath("$[0].description").value("good"))
+                    .andExpect(jsonPath("$[1].description").value("excellent"));
+
+        }
+
+
 
 
 }

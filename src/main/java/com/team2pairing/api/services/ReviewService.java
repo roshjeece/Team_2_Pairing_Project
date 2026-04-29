@@ -6,6 +6,7 @@ import com.team2pairing.api.repository.ReviewRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -22,6 +23,10 @@ public class ReviewService {
     public Review saveReview(Review review) {
         review.setReviewDate(LocalDate.now());
         return reviewRepository.save(review);
+    }
+
+    public List<Review> getReviewsByLeaderId(Long leader_id){
+        return reviewRepository.findByUserId(leader_id);
     }
 
 }

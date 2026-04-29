@@ -15,7 +15,10 @@ export const NavBar = () => {
                         <Nav.Link as={Link} to="/">Leaders</Nav.Link>
 
                         {/* Link to the Reviews page */}
-                        <Nav.Link as={Link} to="/review">Reviews</Nav.Link>
+                        <Nav.Link as={Link} to="/review">Post Reviews</Nav.Link>
+
+                        {/* Link to the Reviews page */}
+                        <Nav.Link as={Link} to="/viewReview">View Reviews</Nav.Link>
                     </Nav>
                 </Navbar.Collapse>
             </Container>
