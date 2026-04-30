@@ -1,9 +1,10 @@
-import type { Leader } from "./LeaderType.ts";
-import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { number, object, string } from "yup";
-import { axiosSaveLeader } from "./LeaderService.ts";
+import type {Leader} from "./LeaderType.ts";
+import {useForm} from "react-hook-form";
+import {yupResolver} from "@hookform/resolvers/yup";
+import {number, object, string} from "yup";
+import {axiosSaveLeader} from "./LeaderService.ts";
 
+// yup validation schema
 const validationSchema = object({
     id: number(),
     fname: string().required("First Name Is Required"),
@@ -11,30 +12,47 @@ const validationSchema = object({
     job_title: string().required("Enter A Job Title")
 });
 
-// ADDED: prop type so LeaderPage can refresh the list after a save
+// prop types, accepts optional callback to notify the parent when a leader is saved
 type LeaderFormProps = {
     onLeaderSaved?: () => void;
 }
 
-export const LeaderForm = ({ onLeaderSaved }: LeaderFormProps) => {
+export const LeaderForm = ({onLeaderSaved}: LeaderFormProps) => {
+    // initialize RHF with Yup validation and empty default values
     const {
         register,
         handleSubmit,
-        reset,                              // ADDED: clears form after submit
-        formState: { errors }
+        setValue,
+        formState: {errors},
     } = useForm<Leader>({
-        resolver: yupResolver(validationSchema) as any
+        mode: "onSubmit",
+        resolver: yupResolver(validationSchema) as any,
+        defaultValues: {
+            fname: "",
+            lname: "",
+            job_title: ""
+        }
     });
 
+    // saves leader, clear fields, notifies parent
     const onSubmit = async (data: any) => {
-        await axiosSaveLeader(data);
-        reset();                            // ADDED: clear fields after save
-        if (onLeaderSaved) onLeaderSaved(); // ADDED: tell parent to refresh
+        try {
+            await axiosSaveLeader(data);
+            // KEY: use setValue instead of reset() to avoid RHF internal state conflicts
+            // caused by parents re-renders triggered by onLeaderSaved
+            setValue("fname", "");
+            setValue("lname", "");
+            setValue("job_title", "");
+            if (onLeaderSaved) onLeaderSaved();
+        } catch (err) {
+            console.error("Save failed:", err);
+        }
     };
 
     return (
         <>
             <h2>Leader Form</h2>
+            {/* handleSubmit runs validation before calling onSubmit */}
             <form onSubmit={handleSubmit(onSubmit)} method="POST">
 
                 <label htmlFor="fname">First Name:</label>
@@ -45,7 +63,7 @@ export const LeaderForm = ({ onLeaderSaved }: LeaderFormProps) => {
                 />
                 {errors.fname && <span>{errors.fname.message}</span>}
 
-                <br />
+                <br/>
 
                 <label htmlFor="lname">Last Name:</label>
                 <input
@@ -55,7 +73,7 @@ export const LeaderForm = ({ onLeaderSaved }: LeaderFormProps) => {
                 />
                 {errors.lname && <span>{errors.lname.message}</span>}
 
-                <br />
+                <br/>
 
                 <label htmlFor="job_title">Job Title:</label>
                 <input
@@ -65,7 +83,7 @@ export const LeaderForm = ({ onLeaderSaved }: LeaderFormProps) => {
                 />
                 {errors.job_title && <span>{errors.job_title.message}</span>}
 
-                <br />
+                <br/>
 
                 <button type="submit">Add Leader</button>
 
